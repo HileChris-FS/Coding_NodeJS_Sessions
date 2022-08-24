@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const sessions = require('express-session');
 
 router.get("/",(req, res) => {
     res.render('index', {
@@ -25,11 +26,30 @@ router.get("/projects",(req, res) => {
     });
 });
 
-router.get("/registration",(req, res) => {
-    res.render('registration', {
-        pagename: "Registration",
+
+router.get("/logon",(req, res) => {
+    res.render('logon', {
+        pagename: "Logon",
     });
 });
+
+let login = true;
+router.post('/login', (req, res) => {
+    if(login){
+        sessions = req.session;
+        sessions.userid = "Mike";
+        res.render('index', {pagename: "Home", sess: sessions})
+    }
+    else {
+        res.render("login", {pagename: 'Login', error: "Invalid username"});
+    }
+});
+
+router.get('/logout', (req, res) => {
+    req.session.destroy(null)
+    res.render('index', {pagename:"Home"})
+});
+
 
 
 
